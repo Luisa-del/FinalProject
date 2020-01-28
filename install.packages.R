@@ -18,5 +18,7 @@ library(ncdf4)
 install.packages("ncdf")
 
 
-#QGIS, OTB, Terminal?!  -> vpn
+#QGIS, OTB
+#Home-Folder
+#Terminal?!  -> vpn
 

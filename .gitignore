@@ -3,6 +3,10 @@
 .RData
 .Ruserdata
 
+
 #ignore .nz, .pdf
 .nz
 .pdf
+
+
+.Tutorial_Data
