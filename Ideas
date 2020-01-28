@@ -1,0 +1,16 @@
+R PROJECT
+
+topic: wind/ocean current visualisation
+
+https://github.com/cambecc/earth
+http://hint.fm/wind/
+https://earth.nullschool.net/about.html
+https://medium.com/plotly/how-to-create-2d-and-3d-interactive-weather-maps-in-python-and-r-77ddd53cca8
+
+
+DATA FOR OCEAN ANALYSIS:
+
+MODIS
+Aiolos 
+EnviSat -> good for OceanData
+podaac
