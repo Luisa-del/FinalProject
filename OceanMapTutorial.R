@@ -4,18 +4,16 @@
 
 #load required packages-------------------------------------------------------------------------------------------------------
 
-install.packages("oceanmap")
 library(oceanmap)
 library(ncdf4)
-library(raster)
-library(viridis)
-library(viridisLite)
-library(mapdata)
-library(maps)
 library(sp)
+library(raster)
+library(viridisLite)
+library(viridis)
+library(maps)
+library(mapdata)
 library(extrafont)
 
-setwd("/home/luisa/Documents/EAGLE_Master/MB2_Programming_Geostatistics/Final_project/")
 
 #Tutorial-----------------------------------------------------------------------------------------------------------------------------
 
