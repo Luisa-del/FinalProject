@@ -1,22 +1,15 @@
 #doesn't install packages
 
-install.packages("devtools")
-library(devtools)
 
+library(usethis)
+library(devtools)
 install.packages("RStoolbox")
+devtools::install_github("bleutner/RStoolbox")
+
 library(RStoolbox)
 
-install.packages("tidyverse")
-library(tidyverse)
 
-install.packages("oceanmap")
-library(oceanmap)
-
-install.packages("ncdf4")
-library(ncdf4)
-
-install.packages("ncdf")
-
+library(rgdal)
 
 #QGIS, OTB
 #Home-Folder

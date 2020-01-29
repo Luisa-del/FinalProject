@@ -4,7 +4,6 @@
 
 #load required packages-------------------------------------------------------------------------------------------------------
 
-library(oceanmap)
 library(ncdf4)
 library(sp)
 library(raster)
@@ -13,6 +12,10 @@ library(viridis)
 library(maps)
 library(mapdata)
 library(extrafont)
+library(oceanmap)
+
+# comments from tutorial
+### own comments (+own codes)
 
 
 #Tutorial-----------------------------------------------------------------------------------------------------------------------------
@@ -21,24 +24,28 @@ library(extrafont)
 #The data downloaded for this tutorial is seasonal 4 km resolution chlorophyll-a data from the Boreal Summer of 2011
 
 # path to downloaded MODIS-Aqua data
-chl.win = ('/home/luisa/Documents/EAGLE_Master/MB2_Programming_Geostatistics/Final_project/Tutorial_Data/A20111722011263.L3m_SNSU_CHL_chlor_a_4km.nc')
+chl.win = ('/home/luisa/Documents/EAGLE_Master/MB2_Programming_Geostatistics/FinalProject/Tutorial_Data/A20111722011263.L3m_SNSU_CHL_chlor_a_4km.nc')
 
 # read in MODIS-Aqua data
 chl.dat = nc_open(chl.win)
 chl.dat
+
 
 # convert .nc data to raster data for plotting
 chl.dat.raster = nc2raster(chl.dat, "chlor_a", lonname="lon", latname="lat", date=T)
 chl.dat.raster
 plot(chl.dat.raster)
 
+### flip map
+chlflip <- flip(chl.dat.raster, direction = "y")
+plot(chlflip)
 
 
 #In this example, we are creating a map which spans the antimeridian
 #As a result, the longitudinal coordinates of the raster data must be converted from the -180 to 180 format, to the 0 to 360 format
 #This can be done using the rotate function in the Raster package.
 
-chl.360 = shift(raster::rotate(shift(chl.dat.raster, 180)), 180)
+chl.360 = shift(raster::rotate(shift(chlflip, 180)), 180)
 chl.360 #look at data
 plot(chl.360) #plot data
 
@@ -51,7 +58,7 @@ plot(chl.360) #plot data
 
 chl.360.crop = raster::crop(chl.360, extent(c(160, 230, -50, -20))) 
 plot(chl.360.crop)
-chl.360.crop_scs = raster::crop(chl.360, extent(c(80, 150, -50, 30))) 
+chl.360.crop_scs = raster::crop(chl.360, extent(c(95, 125, -10, 30))) 
 plot(chl.360.crop_scs)
 
 
@@ -72,12 +79,12 @@ vpal = viridis(100, alpha = 1, begin = 0, end = 1, option = "viridis")
 #   bwd: border width
 #   grid: optional grid from lon/lat tickmarks
 #   replace.na: replaces na raster values with zero (not recommended)
-#   Save: whether to s  ave the plot (true or false)
+#   Save: whether to save the plot (true or false)
 #   plotname: plotname if saving plot (do not include file extension)
 #   fileformat: set file format (default “png”), width: plot width (inches)
 #   height: plot height (inches)
 #The plot will be saved to your working directory.
 
-v(chl.360.crop_scs, cbpos = "r", pal = vpal, zlim = c(0,1), cb.xlab = expression("Chlorophyll-a (mg m"^-3*")"), bwd = 0.01, grid = F, replace.na = F, Save = T, plotname = "sp_rmd_plot_scs", fileformat = "png", width = 10, height = 5)
-add.region(chl.360.crop)
-
+v(chl.360, cbpos = "r", pal = vpal, zlim = c(0,1), cb.xlab = expression("Chlorophyll-a (mg m"^-3*")"), bwd = 0.01, grid = F, replace.na = F, Save = T, plotname = "sp_rmd_plot_chl-a", fileformat = "png", width = 10, height = 5, add.region("WCPO"))
+data("region_definitions")
+region_definitions
