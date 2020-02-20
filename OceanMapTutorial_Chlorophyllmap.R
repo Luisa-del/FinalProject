@@ -30,7 +30,6 @@ chl.win = ('/home/luisa/Documents/EAGLE_Master/MB2_Programming_Geostatistics/Fin
 chl.dat = nc_open(chl.win)
 chl.dat
 
-
 # convert .nc data to raster data for plotting
 chl.dat.raster = nc2raster(chl.dat, "chlor_a", lonname="lon", latname="lat", date=T)
 chl.dat.raster
@@ -58,6 +57,8 @@ plot(chl.360) #plot data
 
 chl.360.crop = raster::crop(chl.360, extent(c(160, 230, -50, -20))) 
 plot(chl.360.crop)
+
+#crop to SCS area
 chl.360.crop_scs = raster::crop(chl.360, extent(c(95, 125, -10, 30))) 
 plot(chl.360.crop_scs)
 
@@ -66,7 +67,6 @@ plot(chl.360.crop_scs)
 #I personally like the viridis palette, but many other options are available.
 
 vpal = viridis(100, alpha = 1, begin = 0, end = 1, option = "viridis")
-
 
 
 #The chlorophyll-a map can now be generated using the v function in the oceanmap package.
@@ -85,6 +85,6 @@ vpal = viridis(100, alpha = 1, begin = 0, end = 1, option = "viridis")
 #   height: plot height (inches)
 #The plot will be saved to your working directory.
 
-v(chl.360, cbpos = "r", pal = vpal, zlim = c(0,1), cb.xlab = expression("Chlorophyll-a (mg m"^-3*")"), bwd = 0.01, grid = F, replace.na = F, Save = T, plotname = "sp_rmd_plot_chl-a", fileformat = "png", width = 10, height = 5, add.region("WCPO"))
+v(chl.360.crop_scs, cbpos = "r", pal = vpal, zlim = c(0,1), cb.xlab = expression("Chlorophyll-a (mg m"^-3*")"), bwd = 0.01, grid = F, replace.na = F, Save = T, plotname = "sp_rmd_plot_chl-a_scs", fileformat = "png", width = 10, height = 5, add.region("WCPO"))
 data("region_definitions")
 region_definitions
