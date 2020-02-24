@@ -16,7 +16,5 @@ library(rgdal)
 #Terminal?!  -> vpn
 
 
-##run this in order to update r (https://stackoverflow.com/questions/13656699/update-r-using-rstudio/29050116)
-install_github('andreacirilloac/updateR')
-library(updateR)
-updateR(admin_password = 'Admin user password')
+
+
