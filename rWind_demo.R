@@ -1,6 +1,7 @@
 setwd("/home/luisa/Desktop/")
 getwd()
 
+
 # Download and install "rWind" package from CRAN:
 install.packages("rWind")
 # You should install also "raster" package if you do not have it 
