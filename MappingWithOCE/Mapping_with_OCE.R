@@ -228,6 +228,9 @@ Zlim_scs = c(18,30)
 ## load SST data
 nc_scs = nc_open("/home/luisa/Documents/EAGLE_Master/MB2_Programming_Geostatistics/FinalProject/MappingWithOCE/Data/opendap_SST_GHRSST_20110101//20110101-NCDC-L4LRblend-GLOB-v01-fv02_0-AVHRR_AMSR_OI.nc.bz2.nc4")
 
+## optional: add figure for active plotting
+#figure(width = 9.75, height = 5.28)
+
 ## draw scalebar
 drawPalette(zlim = Zlim_scs, 
             col=oce.colorsJet, 

@@ -79,7 +79,7 @@ polygon(cwlon, cwlat, col="gray")
 ###############################################################################################################################################
 #Chapter 3 ####################################################################################################################################
 ###############################################################################################################################################
-
++proj=longlat +datum=WGS84 +no_defs
 
 # Annual-mean sea surface temperature shown in Mollweide projection (p.99)---------------------------------
 
@@ -105,6 +105,32 @@ mapLines(coastlineWorld)
 #thus completing Fig. 3.3.
 
 
+#play around############################################################################################################
+
+lon <- c(95, 125)
+lat <- c(-10, 25)
+
+data(levitus, package="ocedata")
+
+cm <- colormap(zlim=c(-2, 30), col=oceColorsJet)
+
+
+drawPalette(colormap=cm)
+
+
+data(coastlineWorld, package="oce")
+mapPlot(longitude = lon,
+        latitude = lat,
+        projection="+proj=longlat +datum=WGS84 +no_defs", #ESPG 4326
+        grid=FALSE)
+
+mapImage(levitus$longitude, levitus$latitude,
+         levitus$SST, colormap=cm)
+
+mapGrid()
+mapLines(coastlineWorld)
+#thus completing Fig. 3.3.
+
 
 
 ###############################################################################################################################################
@@ -112,7 +138,7 @@ mapLines(coastlineWorld)
 ###############################################################################################################################################
 
 #See Page 248
-#orld view, using the Winkel Tripel projection, popularized by the National Geographic Society
+#world view, using the Winkel Tripel projection, popularized by the National Geographic Society
 #The dots are the positions of Argo floats in January, 2018.
 
 data(coastlineWorld, package="oce")

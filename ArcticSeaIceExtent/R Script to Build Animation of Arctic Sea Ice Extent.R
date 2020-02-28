@@ -10,7 +10,7 @@
 
 
 
-  
+
 library(animation)
 
 ani.options
