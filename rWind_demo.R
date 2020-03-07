@@ -1,47 +1,50 @@
-setwd("/home/luisa/Desktop/")
-getwd()
-
+##############################################################################################################################
+# R Wind #######################################################################################################################
+##############################################################################################################################
 
 # Download and install "rWind" package from CRAN:
-install.packages("rWind")
+  #install.packages("rWind")
+
 # You should install also "raster" package if you do not have it 
 
 library(rWind)
 library(sp)
 library(raster)
+library(shape)
 
-packageDescription("rWind")
-help(package="rWind")
+  #packageDescription("rWind")
+  #help(package="rWind")
 
 # "rWind" is a package with several tools for downloading, editing and transforming wind data from Global Forecast 
 # System (GFS, see <https://www.ncdc.noaa.gov/data-access/model-data/model-datasets/global-forcast-system-gfs>) of the USA's
 # National Weather Service (NWS, see <http://www.weather.gov/>).
 
-citation("rWind")
+  #citation("rWind")
 
 # > Javier Fernández-López (2016). rWind: Download, Edit and Transform Wind Data from GFS. R package version 0.1.3.
 # > https://CRAN.R-project.org/package=rWind
 
 # First, we can download a wind dataset of a specified date from GFS using wind.dl function
-# help(wind.dl)
+  # help(wind.dl)
 
 # Download wind for Spain region at 2015, February 12, 00:00
-help(wind.dl)
-
-wind.dl(2015,2,12,0,-10,5,35,45)
+  #help(wind.dl)
+  #wind.dl(2015,2,12,0,-10,5,35,45)
 
 # By default, this function generates an R object with downloaded data. You can store it...
-
-wind_data<-wind.dl(2015,2,12,0,-10,5,35,45, type = "read-data", trace = 1)
 wind_data<-wind.dl(2015,2,12,0,-10,5,35,45)
-# SCS: wind_data<-wind.dl(2015,12,12,0,95,125,-10,25, type = "read-data", trace = 1)
+head(wind.data)
 
-head(wind_data)
+#--> for South China Sea #####################################
+wind_data_scs<-wind.dl(2015,12,12,0,95,125,-10,25)
+head(wind_data_scs)
+##############################################################
 
 # or download into your work directory a CVS file with the data using type="csv" argument:
-
-getwd()
-wind.dl(2015,2,12,0,-10,5,35,45, type="csv")
+ 
+  #getwd()
+  #wind.dl(2015,2,12,0,-10,5,35,45, type="csv")
+  
 
 # If you inspect inside wind_data object, you can see that data are organized in a weird way, with
 # to rows as headers, a column with date and time, longitude data expresed in 0/360 notation and wind
@@ -49,14 +52,14 @@ wind.dl(2015,2,12,0,-10,5,35,45, type="csv")
 # data using "wind.fit" function:
 #help(wind.fit)
 
-wind_data<-wind.fit(wind_data)
-
-head(wind_data)
+  #wind_data<-wind.fit(wind_data) #geht nicht
+  #wind_data <- wind.data #daher teile ich bsp. zu
+  #head(wind_data)
 
 # Now, data are organized by latitude, with -180/180 and U and V vector components are transformed
 # into direction and speed. You can export the data.frame as an CVS file to be used with a GIS software
 
-write.csv(wind_data, "wind_data.csv")
+  #write.csv(wind_data, "wind_data.csv")
 
 # Once that you have data organized by latitude and you have direction and speed information fields,
 # you can use it to create a raster layer with wind2raster function to be used by GIS software or to be ploted 
@@ -64,8 +67,22 @@ write.csv(wind_data, "wind_data.csv")
 # As raster layer can only store one information field, you should choose between direction (type="dir")
 # or speed (type="speed").
 
-r_dir <- wind2raster(wind_data, type="dir")
-r_speed <- wind2raster(wind_data, type="speed") 
+  #str(wind_data)
+  #r_dir <- wind2raster(wind_data, type="dir") #geht nicht
+  #r_speed <- wind2raster(wind_data, type="speed") #geht nicht
+
+r_dir <- wind_data$dir
+r_speed <- wind_data$speed
+
+windraster <- wind2raster(wind_data)
+head(windraster)
+
+# --> for South China Sea ####################################
+r_dir_scs <- wind_data_scs$dir
+r_speed_scs <- wind_data_scs$speed
+windraster_scs <- wind2raster(wind_data_scs)
+head(windraster_scs)
+##############################################################
 
 # Now, you can use rworldmap package to plot countries contourns with your direction and speed data!
 
@@ -75,23 +92,47 @@ newmap <- getMap(resolution = "low")
 
 par(mfrow=c(1,2))
 
-plot(r_dir, main="direction")
+plot(windraster$direction, main="direction")
 lines(newmap, lwd=4)
 
-plot(r_speed, main="speed")
+plot(windraster$speed, main="speed")
 lines(newmap, lwd=4)
+
+# --> for South China Sea ####################################
+newmap <- getMap(resolution = "low")
+par(mfrow=c(1,2))
+plot(windraster_scs$direction, main="direction")
+lines(newmap, lwd=4)
+plot(windraster_scs$speed, main="speed")
+lines(newmap, lwd=4)
+##############################################################
 
 # Additionally, you can use arrowDir and Arrowhead (from "shape" package) functions to plot wind direction
 # over a raster graph:
 
-#install.packages("shape")
-library(shape) 
 
 dev.off()
 alpha<- arrowDir(wind_data)
-plot(r_speed, main="wind direction (arrows) and speed (colours)")
+#figure(width = 9.75, height = 5.28)
+plot(windraster$speed, main="wind direction (arrows) and speed (colours)")
 lines(newmap, lwd=4)
 Arrowhead(wind_data$lon, wind_data$lat, angle=alpha, arr.length = 0.12, arr.type="curved")
+
+
+# --> for South China Sea ####################################
+dev.off()
+alpha<- arrowDir(wind_data_scs)
+plot(windraster_scs$speed, main="wind direction (arrows) and speed (colours)")
+lines(newmap, lwd=4)
+Arrowhead(wind_data_scs$lon, wind_data_scs$lat, angle=alpha, arr.length = 0.12, arr.type="curved")
+##############################################################
+
+
+
+#-##########################################################################################################################
+#-Time Series-############################################################################################################
+##########################################################################################################################
+
 
 # If you want a time series of wind data, you can download it by using a for-in loop:
 # First, you should create an empty list where you will store all the data

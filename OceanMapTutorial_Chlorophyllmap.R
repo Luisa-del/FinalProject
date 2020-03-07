@@ -84,7 +84,10 @@ vpal = viridis(100, alpha = 1, begin = 0, end = 1, option = "viridis")
 #   fileformat: set file format (default “png”), width: plot width (inches)
 #   height: plot height (inches)
 #The plot will be saved to your working directory.
+figure(width = 9.75, height = 5.28)
 
 v(chl.360.crop_scs, cbpos = "r", pal = vpal, zlim = c(0,1), cb.xlab = expression("Chlorophyll-a (mg m"^-3*")"), bwd = 0.01, grid = F, replace.na = F, Save = T, plotname = "sp_rmd_plot_chl-a_scs", fileformat = "png", width = 10, height = 5, add.region("WCPO"))
+
 data("region_definitions")
 region_definitions
+

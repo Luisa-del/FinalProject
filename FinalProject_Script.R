@@ -29,7 +29,6 @@ bathy <- get.bathy(lon=lon, lat=lat, terrain=T, res=3, keep=T, visualize=T, subp
 
 # add figure (optional)
 figure(width = 9.75, height = 5.28)
-
 v(bathy, param="bathy", subplot=TRUE, terrain=T, levels=c(200 ,2000), cbpos="r", main="South China Sea") # change map by adding parameters
 
 
@@ -115,6 +114,94 @@ mapPolygon(coastlineWorld,
 
 ## add text
 mapScalebar(x = "topleft", y = NULL, length = 1000, col = "black")
+
+
+
+
+
+
+##############################################################################################################################
+# Wind #######################################################################################################################
+##############################################################################################################################
+
+
+# load necessary packages 
+
+library(rWind)
+library(sp)
+library(raster)
+library(rworldmap) 
+library(shape)
+
+
+# Download and generate R-Object of wind for Study Area (SCS) at e.g 2015, February 12, 00:00
+wind_data_scs<-wind.dl(2015,12,12,0,95,125,-10,25)
+head(wind_data_scs)
+
+#Spain region################################
+#wind_data<-wind.dl(2015,2,12,0,-10,5,35,45)
+#head(wind.data)
+#############################################
+
+
+# generate direction and speed objects
+r_dir_scs <- wind_data_scs$dir
+r_speed_scs <- wind_data_scs$speed
+
+windraster_scs <- wind2raster(wind_data_scs)
+head(windraster_scs)
+
+#Spain region########################
+#r_dir <- wind_data$dir
+#r_speed <- wind_data$speed
+#windraster <- wind2raster(wind_data)
+#head(windraster)
+#####################################
+
+
+# Use rworldmap package to plot countries contourns with your direction and speed data!
+newmap <- getMap(resolution = "low")
+
+par(mfrow=c(1,2))
+
+plot(windraster_scs$direction, main="direction")
+lines(newmap, lwd=4)
+
+plot(windraster_scs$speed, main="speed")
+lines(newmap, lwd=4)
+
+# Spain Region ################################
+#newmap <- getMap(resolution = "low")
+#par(mfrow=c(1,2))
+#plot(windraster$direction, main="direction")
+#lines(newmap, lwd=4)
+#plot(windraster$speed, main="speed")
+#lines(newmap, lwd=4)
+###############################################
+
+
+# Use arrowDir and Arrowhead (from "shape" package) functions to plot wind direction over a raster graph
+
+dev.off()
+alpha<- arrowDir(wind_data_scs)
+figure(width = 9.75, height = 5.28)
+plot(windraster_scs$speed, main="wind direction (arrows) and speed (colours)")
+lines(newmap, lwd=4)
+Arrowhead(wind_data_scs$lon, wind_data_scs$lat, angle=alpha, arr.length = 0.12, arr.type="curved")
+
+#Spain Region ############################################################################
+#dev.off()
+#alpha<- arrowDir(wind_data)
+#plot(windraster$speed, main="wind direction (arrows) and speed (colours)")
+#lines(newmap, lwd=4)
+#Arrowhead(wind_data$lon, wind_data$lat, angle=alpha, arr.length = 0.12, arr.type="curved")
+##########################################################################################
+
+
+
+##############################################################################################################################
+# Chlorophyll #######################################################################################################################
+##############################################################################################################################
 
 
 
