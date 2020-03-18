@@ -142,19 +142,33 @@ library(rnaturalearth)
 library(rnaturalearthdata)
 library(sf)
 
+# Settings---------------------------------------------------------------------------------------------------------------------
+
+#-> set working directoriy
+#home_dir <- "/home/luisa/Documents/EAGLE_Master/MB2_Programming_Geostatistics/FinalProject/wind/"
+#setwd(home_dir)
+getwd()
+
+#-> Define output directory of data downloads and export folder (maybe data download not necessary)
+#data_dir <- "Data/"
+#export_dir <- "Export/"
+#dir.create(data_dir,showWarnings = TRUE)
+#dir.create(export_dir,showWarnings = TRUE)
+
+
+
+#------------------------------------------------------------------------------------------------------------------------------
 
 # Download and generate R-Object of wind for Study Area (SCS) at 2019, Feb/May/Aug/Nov 12, 00:00 ------------------------------
 
 #feb
-wind_data_feb<-wind.dl(2019,02,12,0,95,125,-10,25)
+wind_data_feb<-wind.dl(2019,02,12,0,95,125,-10,25)   #wind_data_feb2 <- wind.dl_2("2019/2/12 00:00:00",95,125,-10,25)
 #may
 wind_data_may<-wind.dl(2019,05,12,0,95,125,-10,25)
 #aug
 wind_data_aug<-wind.dl(2019,08,12,0,95,125,-10,25)
 #nov
 wind_data_nov<-wind.dl(2019,11,12,0,95,125,-10,25)
-
-
 
 # extract values for ggplot ---------------------------------------------------------------------------------------------------
 
@@ -176,7 +190,7 @@ latitude_aug = wind_data_aug$lat
 u_aug = wind_data_aug$ugrd10m
 v_aug = wind_data_aug$vgrd10m
 
-#feb
+#nov
 longitude_nov = wind_data_nov$lon
 latitude_nov = wind_data_nov$lat
 u_nov = wind_data_nov$ugrd10m
@@ -186,8 +200,13 @@ v_nov = wind_data_nov$vgrd10m
 
 # create polygon of countries to add to plot ----------------------------------------------------------------------------------
 
-world <- ne_countries(scale = "medium", returnclass = "sf")
+world <- ne_countries(scale = "medium", returnclass = "sf", )
+#studyarea <- clip()
 
+class(world)
+
+#scs_lonlat <- data.frame(longitude = c(95, 125), latitude = c(-10, 25)) #no data, combine somehow woth world
+#class(scs_lonlat)
 
 
 # ggplot windmaps -------------------------------------------------------------------------------------------------------------
@@ -270,12 +289,324 @@ wind.vector_nov = ggplot(data = world) +
               legend.background = element_rect(colour = 1, fill = "white"))+
         labs(x = NULL, y = NULL, title = "SCS Wind Map - November 2019")
 
+wind.vector_aug
+wind.vector_nov
+wind.vector_feb
+wind.vector_may
+
+cowplot::plot_grid(wind.vector_feb, wind.vector_may, wind.vector_aug, wind.vector_nov, ncol = 2, nrow = 2)
+cowplot::plot_grid(wind.vector_feb, wind.vector_may, ncol = 2)
+cowplot::plot_grid(wind.vector_aug, wind.vector_nov, ncol = 2)
+
+
+
+
+##########################################################################################################################
+#-Time Series-############################################################################################################
+##########################################################################################################################
+
+library(rWind)
+library(lubridate)
+
+#Download and store data--------------------------------------------------------------------------------------------------
+
+#feb
+dt_feb <- seq(ymd_hms(paste(2019,2,1,00,00,00, sep="-")),
+          ymd_hms(paste(2019,2,7,21,00,00, sep="-")),by="3 hours") #eig 28 statt 7
+wind_serie_feb <- wind.dl_2(dt_feb,95,125,-10,25)
+tidy(wind_serie_feb) #ist das notwendig?
+class(wind_serie_feb)
+
+#may
+dt_may <- seq(ymd_hms(paste(2019,5,1,00,00,00, sep="-")),
+              ymd_hms(paste(2019,5,7,21,00,00, sep="-")),by="3 hours") #eig 31 statt 7
+wind_serie_may <- wind.dl_2(dt_may,95,125,-10,25)
+tidy(wind_serie_may)
+class(wind_serie_may)
+
+#aug
+dt_aug <- seq(ymd_hms(paste(2019,8,1,00,00,00, sep="-")),
+              ymd_hms(paste(2019,8,7,21,00,00, sep="-")),by="3 hours") #eig 31 statt 7
+wind_serie_aug <- wind.dl_2(dt_aug,95,125,-10,25)
+tidy(wind_serie_aug)
+class(wind_serie_aug)
+
+#nov
+dt_nov <- seq(ymd_hms(paste(2019,11,1,00,00,00, sep="-")),
+              ymd_hms(paste(2019,11,7,21,00,00, sep="-")),by="3 hours") #eig 30 statt 7
+wind_serie_nov <- wind.dl_2(dt_nov,95,125,-10,25)
+tidy(wind_serie_nov)
+class(wind_serie_nov)
+
+
+wind_serie_feb
+wind_serie_may
+wind_serie_aug
+wind_serie_nov
+
+
+
+
+#world polygon of Natural Earth Data
+world <- ne_countries(scale = "medium", returnclass = "sf", )
+
+
+
+# Use wind.mean function to calculate wind average----------------------------------------------------------------------------
+
+#feb
+w_mean_feb <- wind.mean(wind_serie_feb)
+w_mean_feb
+class(w_mean_feb)
+
+#may
+w_mean_may <- wind.mean(wind_serie_may)
+w_mean_may
+class(w_mean_may)
+
+#aug
+w_mean_aug <- wind.mean(wind_serie_aug)
+w_mean_aug
+class(w_mean_aug)
+
+#nov
+w_mean_nov <- wind.mean(wind_serie_nov)
+w_mean_nov
+class(w_mean_nov)
+
+
+
+#extract necessary values---------------------------------------------------------------------------------------------
+
+#feb
+longitude_feb = w_mean_feb$lon
+latitude_feb = w_mean_feb$lat
+u_feb = w_mean_feb$ugrd10m
+v_feb = w_mean_feb$vgrd10m
+
+#may
+longitude_may = w_mean_may$lon
+latitude_may = w_mean_may$lat
+u_may = w_mean_may$ugrd10m
+v_may = w_mean_may$vgrd10m
+
+#aug
+longitude_aug = w_mean_aug$lon
+latitude_aug = w_mean_aug$lat
+u_aug = w_mean_aug$ugrd10m
+v_aug = w_mean_aug$vgrd10m
+
+#nov
+longitude_nov = w_mean_nov$lon
+latitude_nov = w_mean_nov$lat
+u_nov = w_mean_nov$ugrd10m
+v_nov = w_mean_nov$vgrd10m
+
+
+
+#ggplot wind map for four seasons--------------------------------------------------------------------------------------------
+
+#feb
+wind.vector_feb = ggplot(data = world) +
+        geom_raster(data = w_mean_feb, aes(x = longitude_feb, y = latitude_feb, fill = w_mean_feb$speed))+
+        geom_segment(data = w_mean_feb, 
+                     aes(x = longitude_feb, xend = longitude_feb+u_feb/60, y = latitude_feb, 
+                         yend = latitude_feb+v_feb/60), arrow = arrow(length = unit(0.1, "cm")))+
+        geom_sf(data = NULL, fill = "grey85", col = 1)+
+        coord_sf(xlim = c(95, 125), ylim =  c(-10, 25))+
+        scale_fill_gradientn(colours = oce::oceColorsPalette(120), limits = c(0,12), 
+                             na.value = "white", name = "Speed\n (m/s)")+
+        scale_x_continuous(breaks = c(95.5, 125))+
+        theme_bw()+
+        theme(axis.text = element_text(size = 14, colour = 1),
+              legend.text = element_text(size = 14, colour = 1), 
+              legend.title = element_text(size = 14, colour = 1),
+              legend.position = c(.12,.17),
+              legend.background = element_rect(colour = 1, fill = "white"))+
+        labs(x = NULL, y = NULL, title = "SCS Wind Map - February 2019")
+
+#may
+wind.vector_may = ggplot(data = world) +
+        geom_raster(data = w_mean_may, aes(x = longitude_may, y = latitude_may, fill = w_mean_may$speed))+
+        geom_segment(data = w_mean_may, 
+                     aes(x = longitude_may, xend = longitude_may+u_may/60, y = latitude_may, 
+                         yend = latitude_may+v_may/60), arrow = arrow(length = unit(0.1, "cm")))+
+        geom_sf(data = NULL, fill = "grey85", col = 1)+
+        coord_sf(xlim = c(95, 125), ylim =  c(-10, 25))+
+        scale_fill_gradientn(colours = oce::oceColorsPalette(120), limits = c(0,12), 
+                             na.value = "white", name = "Speed\n (m/s)")+
+        scale_x_continuous(breaks = c(95.5, 125))+
+        theme_bw()+
+        theme(axis.text = element_text(size = 14, colour = 1),
+              legend.text = element_text(size = 14, colour = 1), 
+              legend.title = element_text(size = 14, colour = 1),
+              legend.position = c(.12,.17),
+              legend.background = element_rect(colour = 1, fill = "white"))+
+        labs(x = NULL, y = NULL, title = "SCS Wind Map - May 2019")
+
+#aug
+wind.vector_aug = ggplot(data = world) +
+        geom_raster(data = w_mean_aug, aes(x = longitude_aug, y = latitude_aug, fill = w_mean_aug$speed))+
+        geom_segment(data = w_mean_aug, 
+                     aes(x = longitude_aug, xend = longitude_aug+u_aug/60, y = latitude_aug, 
+                         yend = latitude_aug+v_aug/60), arrow = arrow(length = unit(0.1, "cm")))+
+        geom_sf(data = NULL, fill = "grey85", col = 1)+
+        coord_sf(xlim = c(95, 125), ylim =  c(-10, 25))+
+        scale_fill_gradientn(colours = oce::oceColorsPalette(120), limits = c(0,12), 
+                             na.value = "white", name = "Speed\n (m/s)")+
+        scale_x_continuous(breaks = c(95.5, 125))+
+        theme_bw()+
+        theme(axis.text = element_text(size = 14, colour = 1),
+              legend.text = element_text(size = 14, colour = 1), 
+              legend.title = element_text(size = 14, colour = 1),
+              legend.position = c(.12,.17),
+              legend.background = element_rect(colour = 1, fill = "white"))+
+        labs(x = NULL, y = NULL, title = "SCS Wind Map - August 2019")
+
+
+#nov
+wind.vector_nov = ggplot(data = world) +
+        geom_raster(data = w_mean_nov, aes(x = longitude_nov, y = latitude_nov, fill = w_mean_nov$speed))+
+        geom_segment(data = w_mean_nov, 
+                     aes(x = longitude_nov, xend = longitude_nov+u_nov/60, y = latitude_nov, 
+                         yend = latitude_nov+v_nov/60), arrow = arrow(length = unit(0.1, "cm")))+
+        geom_sf(data = NULL, fill = "grey85", col = 1)+
+        coord_sf(xlim = c(95, 125), ylim =  c(-10, 25))+
+        scale_fill_gradientn(colours = oce::oceColorsPalette(120), limits = c(0,12), 
+                             na.value = "white", name = "Speed\n (m/s)")+
+        scale_x_continuous(breaks = c(95.5, 125))+
+        theme_bw()+
+        theme(axis.text = element_text(size = 14, colour = 1),
+              legend.text = element_text(size = 14, colour = 1), 
+              legend.title = element_text(size = 14, colour = 1),
+              legend.position = c(.12,.17),
+              legend.background = element_rect(colour = 1, fill = "white"))+
+        labs(x = NULL, y = NULL, title = "SCS Wind Map - November 2019")
+
+#plot single maps
+wind.vector_feb
+wind.vector_may
+wind.vector_aug
+wind.vector_nov
 
 
 cowplot::plot_grid(wind.vector_feb, wind.vector_may, wind.vector_aug, wind.vector_nov, ncol = 2, nrow = 2)
+cowplot::plot_grid(wind.vector_feb, wind.vector_may, ncol = 2)
+cowplot::plot_grid(wind.vector_aug, wind.vector_nov, ncol = 2)
 
 
 
+
+
+
+
+
+# And then use wind2raster directly to create a raster layer  
+
+r_mean_feb <- wind2raster(w_mean_feb)  
+
+# We can plot a subset of this raster around Azores Islands.  
+# Using "arrowDir" we can include arrows for wind direction with   
+# "Arrowhead" function from "shape" R package  
+
+plot(r_mean_feb$speed, main= "Wind speed and direction average",
+     xlim=c(95,125), ylim=c(-10,25))  
+alpha <- arrowDir(w_mean_feb)  
+library(shape)  
+Arrowhead(w_mean_feb$lon, w_mean_feb$lat, angle=alpha,   
+          arr.length = 0.02, arr.type="curved")  
+lines(getMap(resolution = "low"), lwd=4)  
+
+
+
+#with loop function------------------------------------------------------------------------------------------------------------------------------
+
+# create an empty list where you will store all the data
+wind_serie_feb2 <- list()
+
+# use wind.dl(2) inside a for-in loop to download and store wind data of the first 5 days of February 2015 at 00:00
+for (d in 1:5){
+        w <- wind.dl_2("2019/2/12 00:00:00",95,125,-10,25)
+        wind_serie_feb2[[d]] <- w
+}
+
+class(wind_serie_feb2)
+wind_serie_feb2
+
+#oder
+wind_serie_feb <- list()
+for (d in 1:5){
+        w<-wind.dl(2019,2,d,0,95,125,-10,25)
+        wind_serie_feb[[d]]<-w
+}
+
+class(wind_serie_feb)
+wind_serie_feb
+
+
+wind.series <- wind.series
+class(wind.series)
+
+
+#new try##################################################################################
+
+
+# create an empty list where you will store all the data
+wind_serie <- list()
+
+# Then, you can use a wind.dl inside a for-in loop to download and store wind data of 
+# the first 5 days of February 2015 at 00:00 in Europe region. It could take a while...
+
+for (d in 1:5){
+        w<-wind.dl(2019,2,d,0,95,125,-10,25)
+        wind_serie[[d]]<-w
+}
+
+wind_serie
+
+
+# Finally, you can use wind.mean function to calculate wind average 
+
+wind_average <- wind.mean(wind.series)
+wind_average <- wind.fit(wind_average)
+r_average_dir <- wind2raster(wind_average, type="dir")
+r_average_speed <- wind2raster(wind_average, type="speed")
+
+par(mfrow=c(1,2))
+
+plot(r_average_dir, main="direction average")
+lines(newmap, lwd=1)
+
+plot(r_average_speed, main="speed average")
+lines(newmap, lwd=1)
+
+
+
+
+
+
+
+
+# Download wind for Iberian Peninsula region at 2015, February 12, 00:00
+## Not run: 
+
+wind.dl_2("2018/3/15 9:00:00",-10,5,35,45)
+
+
+library(lubridate)
+dt <- seq(ymd_hms(paste(2018,1,1,00,00,00, sep="-")),
+          ymd_hms(paste(2018,1,2,21,00,00, sep="-")),by="3 hours")
+ww <- wind.dl_2(dt,-10,5,35,45)
+tidy (ww)
+class(ww)
+
+
+library(lubridate)
+dt <- seq(ymd_h(paste(2015,1,3,00, sep="-")),
+          ymd_h(paste(2015,1,3,21, sep="-")),by="3 hours")
+wind.series <- wind.dl_2(dt, 164, 179, -48, -33)
+
+## End(Not run)
 
 
 

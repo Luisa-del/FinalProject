@@ -128,16 +128,14 @@ Arrowhead(wind_data_scs$lon, wind_data_scs$lat, angle=alpha, arr.length = 0.12, 
 ##############################################################
 
 
-
 #-##########################################################################################################################
 #-Time Series-############################################################################################################
 ##########################################################################################################################
 
-
 # If you want a time series of wind data, you can download it by using a for-in loop:
 # First, you should create an empty list where you will store all the data
 
-wind_serie<- list()
+wind_serie <- list()
 
 # Then, you can use a wind.dl inside a for-in loop to download and store wind data of 
 # the first 5 days of February 2015 at 00:00 in Europe region. It could take a while...
@@ -149,12 +147,13 @@ for (d in 1:5){
 
 wind_serie
 
+
 # Finally, you can use wind.mean function to calculate wind average 
 
-wind_average<-wind.mean(wind_serie)
-wind_average<-wind.fit(wind_average)
-r_average_dir<-wind2raster(wind_average, type="dir")
-r_average_speed<-wind2raster(wind_average, type="speed")
+wind_average <- wind.mean(wind.series)
+wind_average <- wind.fit(wind_average)
+r_average_dir <- wind2raster(wind_average, type="dir")
+r_average_speed <- wind2raster(wind_average, type="speed")
   
   par(mfrow=c(1,2))
 
