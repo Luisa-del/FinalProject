@@ -307,33 +307,46 @@ cowplot::plot_grid(wind.vector_aug, wind.vector_nov, ncol = 2)
 
 library(rWind)
 library(lubridate)
+library(ggplot2)
+library(rnaturalearth)
+library(rnaturalearthdata)
 
 #Download and store data--------------------------------------------------------------------------------------------------
 
 #feb
 dt_feb <- seq(ymd_hms(paste(2019,2,1,00,00,00, sep="-")),
-          ymd_hms(paste(2019,2,7,21,00,00, sep="-")),by="3 hours") #eig 28 statt 7
+          ymd_hms(paste(2019,2,28,18,00,00, sep="-")),by="6 hours") #eig 28 statt 7
 wind_serie_feb <- wind.dl_2(dt_feb,95,125,-10,25)
 tidy(wind_serie_feb) #ist das notwendig?
 class(wind_serie_feb)
 
 #may
 dt_may <- seq(ymd_hms(paste(2019,5,1,00,00,00, sep="-")),
-              ymd_hms(paste(2019,5,7,21,00,00, sep="-")),by="3 hours") #eig 31 statt 7
+              ymd_hms(paste(2019,5,31,18,00,00, sep="-")),by="6 hours") #eig 31 statt 7
 wind_serie_may <- wind.dl_2(dt_may,95,125,-10,25)
 tidy(wind_serie_may)
 class(wind_serie_may)
 
 #aug
 dt_aug <- seq(ymd_hms(paste(2019,8,1,00,00,00, sep="-")),
-              ymd_hms(paste(2019,8,7,21,00,00, sep="-")),by="3 hours") #eig 31 statt 7
+              ymd_hms(paste(2019,8,31,18,00,00, sep="-")),by="12 hours") #eig 31 statt 7
 wind_serie_aug <- wind.dl_2(dt_aug,95,125,-10,25)
 tidy(wind_serie_aug)
 class(wind_serie_aug)
 
+#sep
+dt_sep <- seq(ymd_hms(paste(2019,9,1,00,00,00, sep="-")),
+              ymd_hms(paste(2019,9,30,18,00,00, sep="-")),by="12 hours") #eig 31 statt 7
+wind_serie_sep <- wind.dl_2(dt_sep,95,125,-10,25)
+
+#okt
+dt_oct <- seq(ymd_hms(paste(2019,10,1,00,00,00, sep="-")),
+              ymd_hms(paste(2019,10,31,18,00,00, sep="-")),by="12 hours") #eig 30 statt 7
+wind_serie_oct <- wind.dl_2(dt_oct,95,125,-10,25)
+
 #nov
 dt_nov <- seq(ymd_hms(paste(2019,11,1,00,00,00, sep="-")),
-              ymd_hms(paste(2019,11,7,21,00,00, sep="-")),by="3 hours") #eig 30 statt 7
+              ymd_hms(paste(2019,11,30,18,00,00, sep="-")),by="12 hours") #eig 30 statt 7
 wind_serie_nov <- wind.dl_2(dt_nov,95,125,-10,25)
 tidy(wind_serie_nov)
 class(wind_serie_nov)
@@ -342,8 +355,9 @@ class(wind_serie_nov)
 wind_serie_feb
 wind_serie_may
 wind_serie_aug
+wind_serie_sep
+wind_serie_oct
 wind_serie_nov
-
 
 
 
@@ -369,32 +383,53 @@ w_mean_aug <- wind.mean(wind_serie_aug)
 w_mean_aug
 class(w_mean_aug)
 
+#sep
+w_mean_sep <- wind.mean(wind_serie_sep)
+w_mean_sep
+class(w_mean_sep)
+
+#oct
+w_mean_oct <- wind.mean(wind_serie_oct)
+w_mean_oct
+class(w_mean_oct)
+
 #nov
 w_mean_nov <- wind.mean(wind_serie_nov)
 w_mean_nov
 class(w_mean_nov)
 
 
-
 #extract necessary values---------------------------------------------------------------------------------------------
 
 #feb
-longitude_feb = w_mean_feb$lon
-latitude_feb = w_mean_feb$lat
-u_feb = w_mean_feb$ugrd10m
-v_feb = w_mean_feb$vgrd10m
+longitude_feb <- w_mean_feb$lon
+latitude_feb <- w_mean_feb$lat
+u_feb <- w_mean_feb$ugrd10m
+v_feb <- w_mean_feb$vgrd10m
 
 #may
-longitude_may = w_mean_may$lon
-latitude_may = w_mean_may$lat
-u_may = w_mean_may$ugrd10m
-v_may = w_mean_may$vgrd10m
+longitude_may <- w_mean_may$lon
+latitude_may <- w_mean_may$lat
+u_may <- w_mean_may$ugrd10m
+v_may <- w_mean_may$vgrd10m
 
 #aug
-longitude_aug = w_mean_aug$lon
-latitude_aug = w_mean_aug$lat
-u_aug = w_mean_aug$ugrd10m
-v_aug = w_mean_aug$vgrd10m
+longitude_aug <- w_mean_aug$lon
+latitude_aug <- w_mean_aug$lat
+u_aug <- w_mean_aug$ugrd10m
+v_aug <- w_mean_aug$vgrd10m
+
+#sep
+longitude_sep <- w_mean_sep$lon
+latitude_sep <- w_mean_sep$lat
+u_sep <- w_mean_sep$ugrd10m
+v_sep <- w_mean_sep$vgrd10m
+
+#oct
+longitude_oct = w_mean_oct$lon
+latitude_oct = w_mean_oct$lat
+u_oct = w_mean_oct$ugrd10m
+v_oct = w_mean_oct$vgrd10m
 
 #nov
 longitude_nov = w_mean_nov$lon
@@ -424,7 +459,7 @@ wind.vector_feb = ggplot(data = world) +
               legend.position = c(.12,.17),
               legend.background = element_rect(colour = 1, fill = "white"))+
         labs(x = NULL, y = NULL, title = "SCS Wind Map - February 2019")
-
+wind.vector_feb
 #may
 wind.vector_may = ggplot(data = world) +
         geom_raster(data = w_mean_may, aes(x = longitude_may, y = latitude_may, fill = w_mean_may$speed))+
@@ -463,6 +498,43 @@ wind.vector_aug = ggplot(data = world) +
               legend.background = element_rect(colour = 1, fill = "white"))+
         labs(x = NULL, y = NULL, title = "SCS Wind Map - August 2019")
 
+#sep
+wind.vector_sep = ggplot(data = world) +
+        geom_raster(data = w_mean_sep, aes(x = longitude_sep, y = latitude_sep, fill = w_mean_sep$speed))+
+        geom_segment(data = w_mean_sep, 
+                     aes(x = longitude_sep, xend = longitude_sep+u_sep/60, y = latitude_sep, 
+                         yend = latitude_sep+v_sep/60), arrow = arrow(length = unit(0.1, "cm")))+
+        geom_sf(data = NULL, fill = "grey85", col = 1)+
+        coord_sf(xlim = c(95, 125), ylim =  c(-10, 25))+
+        scale_fill_gradientn(colours = oce::oceColorsPalette(120), limits = c(0,12), 
+                             na.value = "white", name = "Speed\n (m/s)")+
+        scale_x_continuous(breaks = c(95.5, 125))+
+        theme_bw()+
+        theme(axis.text = element_text(size = 14, colour = 1),
+              legend.text = element_text(size = 14, colour = 1), 
+              legend.title = element_text(size = 14, colour = 1),
+              legend.position = c(.12,.17),
+              legend.background = element_rect(colour = 1, fill = "white"))+
+        labs(x = NULL, y = NULL, title = "SCS Wind Map - September 2019")
+
+#oct
+wind.vector_oct = ggplot(data = world) +
+        geom_raster(data = w_mean_oct, aes(x = longitude_oct, y = latitude_oct, fill = w_mean_oct$speed))+
+        geom_segment(data = w_mean_oct, 
+                     aes(x = longitude_oct, xend = longitude_oct+u_oct/60, y = latitude_oct, 
+                         yend = latitude_oct+v_oct/60), arrow = arrow(length = unit(0.1, "cm")))+
+        geom_sf(data = NULL, fill = "grey85", col = 1)+
+        coord_sf(xlim = c(95, 125), ylim =  c(-10, 25))+
+        scale_fill_gradientn(colours = oce::oceColorsPalette(120), limits = c(0,12), 
+                             na.value = "white", name = "Speed\n (m/s)")+
+        scale_x_continuous(breaks = c(95.5, 125))+
+        theme_bw()+
+        theme(axis.text = element_text(size = 14, colour = 1),
+              legend.text = element_text(size = 14, colour = 1), 
+              legend.title = element_text(size = 14, colour = 1),
+              legend.position = c(.12,.17),
+              legend.background = element_rect(colour = 1, fill = "white"))+
+        labs(x = NULL, y = NULL, title = "SCS Wind Map - October 2019")
 
 #nov
 wind.vector_nov = ggplot(data = world) +
@@ -483,17 +555,22 @@ wind.vector_nov = ggplot(data = world) +
               legend.background = element_rect(colour = 1, fill = "white"))+
         labs(x = NULL, y = NULL, title = "SCS Wind Map - November 2019")
 
+
 #plot single maps
 wind.vector_feb
 wind.vector_may
 wind.vector_aug
+wind.vector_sep
+wind.vector_oct
 wind.vector_nov
 
 
 cowplot::plot_grid(wind.vector_feb, wind.vector_may, wind.vector_aug, wind.vector_nov, ncol = 2, nrow = 2)
+cowplot::plot_grid(wind.vector_feb, wind.vector_may, wind.vector_aug, wind.vector_sep, wind.vector_oct, wind.vector_nov, ncol = 3, nrow = 2)
 cowplot::plot_grid(wind.vector_feb, wind.vector_may, ncol = 2)
 cowplot::plot_grid(wind.vector_aug, wind.vector_nov, ncol = 2)
-
+cowplot::plot_grid(wind.vector_feb, wind.vector_aug, ncol = 2)
+cowplot::plot_grid(wind.vector_may, wind.vector_nov, ncol = 2)
 
 
 
