@@ -24,7 +24,7 @@ library(ggrepel)
 
 
 #set working directory
-home_dir <- "/home/luisa/Documents/EAGLE_Master/MB2_Programming_Geostatistics/FinalProject/wind/"
+home_dir <- "/home/luisa/Documents/EAGLE_Master/MB2_Programming_Geostatistics/FinalProject"
 setwd(home_dir)
 getwd()
 
@@ -265,6 +265,22 @@ sa_points <- st_crop(world_points, sa_bb_sf)
 
 #ggplot wind map for every months for the South China Sea ----------------------------------------------------
 
+
+#create theme-design function
+
+theme_design <- function(){            # creating a new theme function
+  theme_bw()+                          # using a predefined theme as a base
+    theme(plot.title = element_text(size = 10, colour = 1) ,
+          plot.subtitle = element_text(size = 8, colour = 1),
+          axis.text = element_text(size = 8, colour = 1),
+          axis.title = element_text(size = 7, colour = 1),
+          legend.text = element_text(size = 7, colour = 1),
+          legend.title = element_text(size = 7, colour = 1), 
+          legend.position = c(1.1,.44),
+          legend.key.height = unit(1.3, "cm"))
+}
+
+
 #jan
 wind.vector_jan = ggplot(data = NULL) +
   #subsequent: plot average wind direction and speed of each month + set parameters for axes and title
@@ -292,15 +308,7 @@ wind.vector_jan = ggplot(data = NULL) +
   scale_fill_gradientn(colours = oce::oceColorsPalette(120), limits = c(0,23),  #ckeck highest windspeed for limit 
                        na.value = "white", name = "Speed\n (m/s)")+ 
   scale_x_continuous(breaks = lonlim)+ 
-  theme_bw()+
-  theme(plot.title = element_text(size = 10, colour = 1) ,
-        plot.subtitle = element_text(size = 8, colour = 1),
-        axis.text = element_text(size = 8, colour = 1),
-        axis.title = element_text(size = 7, colour = 1),
-        legend.text = element_text(size = 7, colour = 1),
-        legend.title = element_text(size = 7, colour = 1), 
-        legend.position = c(1.1,.44), 
-        legend.key.height = unit(1.3, "cm"))
+  theme_design()
 
 wind.vector_jan
 
@@ -329,17 +337,10 @@ wind.vector_feb = ggplot(data = NULL) +
   scale_fill_gradientn(colours = oce::oceColorsPalette(120), limits = c(0,23),
                        na.value = "white", name = "Speed\n (m/s)")+
   scale_x_continuous(breaks = lonlim)+
-  theme_bw()+
-  theme(plot.title = element_text(size = 10, colour = 1) ,
-        plot.subtitle = element_text(size = 8, colour = 1),
-        axis.text = element_text(size = 8, colour = 1),
-        axis.title = element_text(size = 7, colour = 1),
-        legend.text = element_text(size = 7, colour = 1),
-        legend.title = element_text(size = 7, colour = 1), 
-        legend.position = c(1.1,.44),
-        legend.key.height = unit(1.3, "cm"))
+  theme_design()
 
 wind.vector_feb
+
 
 
 #mar
@@ -366,15 +367,7 @@ wind.vector_mar = ggplot(data = NULL) +
   scale_fill_gradientn(colours = oce::oceColorsPalette(120), limits = c(0,23), 
                        na.value = "white", name = "Speed\n (m/s)")+ 
   scale_x_continuous(breaks = lonlim)+ 
-  theme_bw()+
-  theme(plot.title = element_text(size = 10, colour = 1) ,
-        plot.subtitle = element_text(size = 8, colour = 1),
-        axis.text = element_text(size = 8, colour = 1),
-        axis.title = element_text(size = 7, colour = 1),
-        legend.text = element_text(size = 7, colour = 1),
-        legend.title = element_text(size = 7, colour = 1), 
-        legend.position = c(1.1,.44), 
-        legend.key.height = unit(1.3, "cm"))
+  theme_design()
 
 wind.vector_mar
 
@@ -402,15 +395,7 @@ wind.vector_apr = ggplot(data = NULL) +
   scale_fill_gradientn(colours = oce::oceColorsPalette(120), limits = c(0,23), 
                        na.value = "white", name = "Speed\n (m/s)")+ 
   scale_x_continuous(breaks = lonlim)+ 
-  theme_bw()+
-  theme(plot.title = element_text(size = 10, colour = 1) ,
-        plot.subtitle = element_text(size = 8, colour = 1),
-        axis.text = element_text(size = 8, colour = 1),
-        axis.title = element_text(size = 7, colour = 1),
-        legend.text = element_text(size = 7, colour = 1),
-        legend.title = element_text(size = 7, colour = 1), 
-        legend.position = c(1.1,.44), 
-        legend.key.height = unit(1.3, "cm"))
+  theme_design()
 
 wind.vector_apr        
 
@@ -438,15 +423,7 @@ wind.vector_may = ggplot(data = NULL) +
   scale_fill_gradientn(colours = oce::oceColorsPalette(120), limits = c(0,23), 
                        na.value = "white", name = "Speed\n (m/s)")+ 
   scale_x_continuous(breaks = lonlim)+ 
-  theme_bw()+
-  theme(plot.title = element_text(size = 10, colour = 1) ,
-        plot.subtitle = element_text(size = 8, colour = 1),
-        axis.text = element_text(size = 8, colour = 1),
-        axis.title = element_text(size = 7, colour = 1),
-        legend.text = element_text(size = 7, colour = 1),
-        legend.title = element_text(size = 7, colour = 1), 
-        legend.position = c(1.1,.44), 
-        legend.key.height = unit(1.3, "cm"))
+  theme_design()
 
 wind.vector_may        
 
@@ -474,15 +451,7 @@ wind.vector_jun = ggplot(data = NULL) +
   scale_fill_gradientn(colours = oce::oceColorsPalette(120), limits = c(0,23), 
                        na.value = "white", name = "Speed\n (m/s)")+ 
   scale_x_continuous(breaks = lonlim)+ 
-  theme_bw()+
-  theme(plot.title = element_text(size = 10, colour = 1) ,
-        plot.subtitle = element_text(size = 8, colour = 1),
-        axis.text = element_text(size = 8, colour = 1),
-        axis.title = element_text(size = 7, colour = 1),
-        legend.text = element_text(size = 7, colour = 1),
-        legend.title = element_text(size = 7, colour = 1), 
-        legend.position = c(1.1,.44), 
-        legend.key.height = unit(1.3, "cm"))
+  theme_design()
 
 wind.vector_jun
 
@@ -510,15 +479,7 @@ wind.vector_jul = ggplot(data = NULL) +
   scale_fill_gradientn(colours = oce::oceColorsPalette(120), limits = c(0,23), 
                        na.value = "white", name = "Speed\n (m/s)")+ 
   scale_x_continuous(breaks = lonlim)+ 
-  theme_bw()+
-  theme(plot.title = element_text(size = 10, colour = 1) ,
-        plot.subtitle = element_text(size = 8, colour = 1),
-        axis.text = element_text(size = 8, colour = 1),
-        axis.title = element_text(size = 7, colour = 1),
-        legend.text = element_text(size = 7, colour = 1),
-        legend.title = element_text(size = 7, colour = 1), 
-        legend.position = c(1.1,.44), 
-        legend.key.height = unit(1.3, "cm"))
+  theme_design()
 
 wind.vector_jul        
 
@@ -546,15 +507,7 @@ wind.vector_aug = ggplot(data = NULL) +
   scale_fill_gradientn(colours = oce::oceColorsPalette(120), limits = c(0,23), 
                        na.value = "white", name = "Speed\n (m/s)")+ 
   scale_x_continuous(breaks = lonlim)+ 
-  theme_bw()+
-  theme(plot.title = element_text(size = 10, colour = 1) ,
-        plot.subtitle = element_text(size = 8, colour = 1),
-        axis.text = element_text(size = 8, colour = 1),
-        axis.title = element_text(size = 7, colour = 1),
-        legend.text = element_text(size = 7, colour = 1),
-        legend.title = element_text(size = 7, colour = 1), 
-        legend.position = c(1.1,.44), 
-        legend.key.height = unit(1.3, "cm"))
+  theme_design()
 
 wind.vector_aug     
 
@@ -582,15 +535,7 @@ wind.vector_sep = ggplot(data = NULL) +
   scale_fill_gradientn(colours = oce::oceColorsPalette(120), limits = c(0,23), 
                        na.value = "white", name = "Speed\n (m/s)")+ 
   scale_x_continuous(breaks = lonlim)+ 
-  theme_bw()+
-  theme(plot.title = element_text(size = 10, colour = 1) ,
-        plot.subtitle = element_text(size = 8, colour = 1),
-        axis.text = element_text(size = 8, colour = 1),
-        axis.title = element_text(size = 7, colour = 1),
-        legend.text = element_text(size = 7, colour = 1),
-        legend.title = element_text(size = 7, colour = 1), 
-        legend.position = c(1.1,.44), 
-        legend.key.height = unit(1.3, "cm"))
+  theme_design()
 
 wind.vector_sep       
 
@@ -618,15 +563,7 @@ wind.vector_oct = ggplot(data = NULL) +
   scale_fill_gradientn(colours = oce::oceColorsPalette(120), limits = c(0,23), 
                        na.value = "white", name = "Speed\n (m/s)")+ 
   scale_x_continuous(breaks = lonlim)+ 
-  theme_bw()+
-  theme(plot.title = element_text(size = 10, colour = 1) ,
-        plot.subtitle = element_text(size = 8, colour = 1),
-        axis.text = element_text(size = 8, colour = 1),
-        axis.title = element_text(size = 7, colour = 1),
-        legend.text = element_text(size = 7, colour = 1),
-        legend.title = element_text(size = 7, colour = 1), 
-        legend.position = c(1.1,.44), 
-        legend.key.height = unit(1.3, "cm"))
+  theme_design()
 
 wind.vector_oct       
 
@@ -654,15 +591,7 @@ wind.vector_nov = ggplot(data = NULL) +
   scale_fill_gradientn(colours = oce::oceColorsPalette(120), limits = c(0,23), 
                        na.value = "white", name = "Speed\n (m/s)")+ 
   scale_x_continuous(breaks = lonlim)+ 
-  theme_bw()+
-  theme(plot.title = element_text(size = 10, colour = 1) ,
-        plot.subtitle = element_text(size = 8, colour = 1),
-        axis.text = element_text(size = 8, colour = 1),
-        axis.title = element_text(size = 7, colour = 1),
-        legend.text = element_text(size = 7, colour = 1),
-        legend.title = element_text(size = 7, colour = 1), 
-        legend.position = c(1.1,.44), 
-        legend.key.height = unit(1.3, "cm"))
+  theme_design()
 
 wind.vector_nov
 
@@ -690,15 +619,7 @@ wind.vector_dec = ggplot(data = NULL) +
   scale_fill_gradientn(colours = oce::oceColorsPalette(120), limits = c(0,23), 
                        na.value = "white", name = "Speed\n (m/s)")+ 
   scale_x_continuous(breaks = lonlim)+ 
-  theme_bw()+
-  theme(plot.title = element_text(size = 10, colour = 1) ,
-        plot.subtitle = element_text(size = 8, colour = 1),
-        axis.text = element_text(size = 8, colour = 1),
-        axis.title = element_text(size = 7, colour = 1),
-        legend.text = element_text(size = 7, colour = 1),
-        legend.title = element_text(size = 7, colour = 1), 
-        legend.position = c(1.1,.44), 
-        legend.key.height = unit(1.3, "cm"))
+  theme_design()
 
 wind.vector_dec
 
